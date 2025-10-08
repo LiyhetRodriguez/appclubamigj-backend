@@ -77,6 +77,7 @@ export class AuthService implements OnModuleInit {
     const token = await this.jwtService.signAsync(payload);
 
     const { passwordHash, ...datosUsuario } = usuario;
+    
     return {
       token,
       usuario: datosUsuario,
