@@ -24,7 +24,7 @@ export class BannerController {
   @UseInterceptors(
     FileInterceptor('file', {
       storage: diskStorage({
-        destination: (req, file, cb) => {
+        destination: (req, file, cb) => {3
           const uploadPath = join(process.cwd(), 'backend', 'public', 'uploads');
           if (!existsSync(uploadPath)) mkdirSync(uploadPath, { recursive: true });
           cb(null, uploadPath);
