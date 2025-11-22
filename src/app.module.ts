@@ -14,6 +14,7 @@ import { JuegoUsuario } from './entities/juego-usuario.entity';
 import { Publicacion } from './entities/publicacion.entity';
 import { JuegoUsuariosModule } from './juego-usuarios/juego-usuarios.module';
 import { AuthModule } from './auth/auth.module';
+import { BannerModule } from './banner/banner.module';
 
 
 
@@ -37,6 +38,7 @@ import { AuthModule } from './auth/auth.module';
     JuegosModule,
   JuegoUsuariosModule,
   AuthModule,
+  BannerModule,
   ],
   controllers: [AppController],
   providers: [AppService],

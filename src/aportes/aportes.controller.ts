@@ -1,4 +1,4 @@
-import { Controller, Get, Post, Put, Delete, Param, Body } from '@nestjs/common';
+import { Controller, Get, Post, Put, Delete, Param, Body, Req } from '@nestjs/common';
 import { AportesService } from './aportes.service';
 import { Aporte } from 'src/entities/aporte.entity';
 
@@ -19,6 +19,17 @@ export class AportesController {
   @Post()
   create(@Body() data: Partial<Aporte>) {
     return this.aportesService.create(data);
+  }
+
+  @Post('create-preference')
+  async createPreference(@Body() data: { usuarioId: number; monto: number; descripcion?: string }) {
+    return this.aportesService.createPreference(data);
+  }
+
+  @Post('webhook/mercadopago')
+  async mercadopagoWebhook(@Req() req: any) {
+    // Raw notification from Mercado Pago (topic/id or resource/collection)
+    return this.aportesService.handleMercadoPagoNotification(req);
   }
 
   @Put(':id')
