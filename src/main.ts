@@ -11,6 +11,8 @@ async function bootstrap() {
   // Note: upload controller stores files under backend/public/uploads,
   // so we must serve that specific folder at the '/uploads' prefix.
   app.useStaticAssets(join(process.cwd(), 'backend', 'public', 'uploads'), { prefix: '/uploads/' });
-  await app.listen(process.env.PORT ?? 3000);
+  const port = process.env.PORT || 3000;
+await app.listen(port);
+console.log(`🚀 App corriendo en puerto ${port}`);
 }
 bootstrap();
