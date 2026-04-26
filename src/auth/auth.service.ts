@@ -18,12 +18,10 @@ export class AuthService implements OnModuleInit {
     private jwtService: JwtService,
   ) {}
 
-  // ✅ Ya NO crea administrador automáticamente
   async onModuleInit() {
     console.log('🔥 AUTH SIN CREACIÓN AUTOMÁTICA DE ADMIN');
   }
 
-  // ✅ Validar usuario LOGIN REAL
   async validarUsuario(numeroDocumento: string, password: string) {
     if (!numeroDocumento || !password) {
       throw new BadRequestException('Documento y contraseña son obligatorios.');
@@ -37,19 +35,10 @@ export class AuthService implements OnModuleInit {
       throw new UnauthorizedException('Usuario no encontrado.');
     }
 
-    let esValido = false;
-
-    if (
-      usuario.passwordHash.startsWith('$2a$') ||
-      usuario.passwordHash.startsWith('$2b$') ||
-      usuario.passwordHash.startsWith('$2y$')
-    ) {
-      esValido = await bcrypt.compare(password, usuario.passwordHash);
-    } else {
-      esValido =
-        usuario.passwordHash.toString().trim() ===
-        password.toString().trim();
-    }
+    const esValido = await bcrypt.compare(
+      password,
+      usuario.passwordHash,
+    );
 
     if (!esValido) {
       throw new UnauthorizedException('Contraseña incorrecta.');
@@ -66,34 +55,46 @@ export class AuthService implements OnModuleInit {
     };
   }
 
-  // ✅ Registrar usuario
-  async registrarUsuario(data: Partial<Usuario>) {
-    const { numeroDocumento, passwordHash } = data;
+  async registrarUsuario(data: any) {
+    const numeroDocumento = (
+      data.numeroDocumento ||
+      data.numero_documento ||
+      data.documento ||
+      ''
+    ).toString().trim();
 
-    if (!numeroDocumento || !passwordHash) {
-      throw new BadRequestException('Faltan campos obligatorios.');
+    const password = (
+      data.password ||
+      data.passwordHash ||
+      data.contrasena ||
+      ''
+    ).toString().trim();
+
+    if (!numeroDocumento || !password) {
+      throw new BadRequestException('Documento y contraseña son obligatorios.');
     }
 
     const existe = await this.usuarioRepo.findOne({
-      where: { numeroDocumento: numeroDocumento.toString().trim() },
+      where: { numeroDocumento },
     });
 
     if (existe) {
       throw new BadRequestException('El número de documento ya está registrado.');
     }
 
-    const password = await bcrypt.hash(passwordHash, 10);
+    const passwordHash = await bcrypt.hash(password, 10);
 
     const nuevoUsuario = this.usuarioRepo.create({
       ...data,
-      numeroDocumento: numeroDocumento.toString().trim(),
-      passwordHash: password,
-      rol: 'usuario',
-    });
+      numeroDocumento,
+      passwordHash,
+      rol: data.rol || 'usuario',
+    }) as any;
 
-    await this.usuarioRepo.save(nuevoUsuario);
+    const usuarioGuardado = await this.usuarioRepo.save(nuevoUsuario);
 
-    const { passwordHash: _, ...usuarioSeguro } = nuevoUsuario;
+    const { passwordHash: _, ...usuarioSeguro } = usuarioGuardado as any;
+
     return usuarioSeguro;
   }
 }
