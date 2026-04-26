@@ -5,17 +5,17 @@ import { Juego } from './juego.entity';
 @Entity('juego_usuarios')
 export class JuegoUsuario {
   @PrimaryGeneratedColumn()
-  id: number;
+  id!: number;
 
-  @ManyToOne(() => Usuario, (usuario) => usuario.juegosUsuario)
-  usuario: Usuario;
+  @ManyToOne(() => Usuario)
+  usuario!: Usuario;
 
   @ManyToOne(() => Juego, (juego) => juego.usuarios)
-  juego: Juego;
+  juego!: Juego;
 
   @Column()
-  puntaje: number;
+  puntaje!: number;
 
   @Column({ type: 'timestamp' })
-  fecha: Date;
+  fecha!: Date;
 }

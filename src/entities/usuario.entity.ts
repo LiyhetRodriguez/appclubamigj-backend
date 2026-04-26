@@ -20,8 +20,8 @@ export class Usuario {
   @Column({ name: 'fecha_nacimiento', type: 'date' })
   fechaNacimiento: Date;
 
-  @Column({ length: 20, unique: true })
-  celular: string;
+  @Column({ length: 20, unique: true, nullable: true })
+celular!: string;
 
   @Column({ length: 200 })
   direccion: string;
