@@ -14,9 +14,9 @@ import { Usuario } from '../entities/usuario.entity';
 @Controller('auth')
 export class AuthController {
   constructor(
-    private authService: AuthService,
+    private readonly authService: AuthService,
     @InjectRepository(Usuario)
-    private usuarioRepo: Repository<Usuario>,
+    private readonly usuarioRepo: Repository<Usuario>,
   ) {}
 
   @Post('register')
@@ -50,13 +50,20 @@ export class AuthController {
     const passwordHash = await bcrypt.hash(password, 10);
 
     const nuevoUsuario = this.usuarioRepo.create({
-      ...data,
       numeroDocumento,
       passwordHash,
+      nombreCompleto: data.nombreCompleto || data.nombre_completo || '',
+      tipoDocumento: data.tipoDocumento || data.tipo_documento || '',
+      fechaNacimiento: data.fechaNacimiento || data.fecha_nacimiento,
+      celular: data.celular || null,
+      direccion: data.direccion || '',
+      barrio: data.barrio || '',
+      parroquia: data.parroquia || '',
+      email: data.email || `${numeroDocumento}@sinemail.local`,
       rol: data.rol || 'usuario',
-    }) as any;
+    } as any);
 
-    const usuarioGuardado = await this.usuarioRepo.save(nuevoUsuario);
+    const usuarioGuardado = await this.usuarioRepo.save(nuevoUsuario as any);
 
     const { passwordHash: _, ...usuarioSeguro } = usuarioGuardado as any;
 
