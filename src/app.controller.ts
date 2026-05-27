@@ -6,7 +6,7 @@ export class AppController {
   constructor(private readonly appService: AppService) {}
 
   @Get('links')
-   getLinks() {
+  getLinks() {
     return {
       emisora: 'https://tuemisora.com',
       whatsapp: 'https://wa.me/573001234567',
@@ -19,8 +19,5 @@ export class AppController {
   @Get()
   getHello(): string {
     return this.appService.getHello();
-   }
   }
-
-
-  
+}
