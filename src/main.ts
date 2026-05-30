@@ -17,6 +17,7 @@ async function bootstrap() {
   });
 
   const port = Number(process.env.PORT) || 3000;
+  console.log('DATABASE_URL:', process.env.DATABASE_URL);
 
   await app.listen(port, '0.0.0.0');
 
