@@ -10,6 +10,7 @@ async function bootstrap() {
   origin: true,
   credentials: true,
 });
+console.log('🔥 CORS ACTIVADO');
 
   app.useStaticAssets(join(process.cwd(), 'public', 'uploads'), {
     prefix: '/uploads/',
