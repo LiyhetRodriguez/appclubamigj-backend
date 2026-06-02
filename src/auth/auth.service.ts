@@ -40,6 +40,12 @@ export class AuthService implements OnModuleInit {
       },
     });
 
+    console.log('====================');
+    console.log('DOCUMENTO:', numeroDocumento);
+    console.log('PASSWORD:', password);
+    console.log('USUARIO:', usuario);
+    console.log('====================');
+
     if (!usuario) {
       throw new UnauthorizedException(
         'Usuario no encontrado.',
@@ -50,6 +56,8 @@ export class AuthService implements OnModuleInit {
       password,
       usuario.passwordHash,
     );
+
+    console.log('ES VALIDO:', esValido);
 
     if (!esValido) {
       throw new UnauthorizedException(
@@ -62,8 +70,9 @@ export class AuthService implements OnModuleInit {
       rol: usuario.rol,
     };
 
-    const token =
-      await this.jwtService.signAsync(payload);
+    const token = await this.jwtService.signAsync(
+      payload,
+    );
 
     const { passwordHash, ...datosUsuario } =
       usuario;
